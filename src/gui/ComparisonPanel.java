@@ -120,7 +120,7 @@ public class ComparisonPanel extends JPanel {
             // --- Disk Scheduling ---
             DiskSchedulingResult[] diskResults = {
                 FCFS.simulate(head, reqs),
-                SCAN.simulate(head, reqs, diskSize, "right"), // TODO Person 3: add CSCAN, LOOK, CLOOK results here
+                SCAN.simulate(reqs, head, diskSize, "right"),
             };
 
             diskModel.setRowCount(0);

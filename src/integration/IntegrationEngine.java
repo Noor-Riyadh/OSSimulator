@@ -17,23 +17,25 @@ public class IntegrationEngine {
     }
 
     public static List<IntegrationEvent> simulate(PageReplacementResult pageResult,
-                                                   int initialHead,
-                                                   int diskSize,
-                                                   String diskAlgorithm,
-                                                   String scanDirection) {
+            int initialHead,
+            int diskSize,
+            String diskAlgorithm,
+            String scanDirection) {
         List<IntegrationEvent> events = new ArrayList<>();
         int currentHead = initialHead;
 
         for (Step step : pageResult.getSteps()) {
-            if (!step.isPageFault) continue;  
+            if (!step.isPageFault) {
+                continue;
+            }
 
-            int diskBlock  = pageToBlock(step.page);
-            int[] requests = new int[]{ diskBlock };
+            int diskBlock = pageToBlock(step.page);
+            int[] requests = new int[]{diskBlock};
 
             DiskSchedulingResult diskResult;
             switch (diskAlgorithm.toUpperCase()) {
                 case "SCAN":
-                    diskResult = SCAN.simulate(currentHead, requests, diskSize, scanDirection);
+                    diskResult = SCAN.simulate(requests, currentHead, diskSize, scanDirection);
                     break;
                 case "FCFS":
                 default:
@@ -44,13 +46,13 @@ public class IntegrationEngine {
             List<Integer> path = diskResult.getHeadMovementOrder();
 
             IntegrationEvent event = new IntegrationEvent(
-                step.stepNumber,
-                step.page,
-                step.replacedPage,
-                diskBlock,
-                path,
-                pageResult.getAlgorithmName(),
-                diskAlgorithm
+                    step.stepNumber,
+                    step.page,
+                    step.replacedPage,
+                    diskBlock,
+                    path,
+                    pageResult.getAlgorithmName(),
+                    diskAlgorithm
             );
             events.add(event);
 
