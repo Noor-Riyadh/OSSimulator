@@ -8,15 +8,53 @@ import java.util.*;
 public class FIFO {
 
     public static PageReplacementResult simulate(int[] referenceString, int numFrames) {
-        // Steps:
-        // 1. Use a Queue to track insertion order
-        // 2. Use a Set for fast lookup of pages in memory
-        // 3. For each page in referenceString:
-        //    - If page is in memory → hit (no fault)
-        //    - If page not in memory → fault
-        //      * If free frame exists → load directly
-        //      * If memory full → evict front of queue, load new page
-        // 4. Record each step using result.addStep(new Step(...))
-        return null; // replace this
+            PageReplacementResult result = new PageReplacementResult("FIFO");
+ 
+  
+        int[] frames = new int[numFrames];
+        Arrays.fill(frames, -1);
+  
+        Queue<Integer> queue = new LinkedList<>();
+  
+        Set<Integer> inMemory = new HashSet<>();
+ 
+    
+        for (int i = 0; i < referenceString.length; i++) {
+ 
+            int page = referenceString[i]; 
+            boolean isPageFault;           
+            int replacedPage = -1;         
+            if (inMemory.contains(page)) {
+                
+                isPageFault = false;
+            } else {
+                //here page fualt increment +1
+                isPageFault = true;
+
+                if (queue.size() < numFrames) {
+                    for (int f = 0; f < numFrames; f++) {
+                        if (frames[f] == -1) {
+                            frames[f] = page;
+                            break; 
+                        }
+                    }
+ 
+            
+                } else {
+                    replacedPage = queue.poll();
+                    inMemory.remove(replacedPage);
+                    for (int f = 0; f < numFrames; f++) {
+                        if (frames[f] == replacedPage) {
+                            frames[f] = page;
+                            break;
+                        }
+                    }
+                }
+                queue.add(page);
+                inMemory.add(page);
+            }
+            result.addStep(new Step(i + 1, page, Arrays.copyOf(frames, frames.length), isPageFault, replacedPage));
+        }
+        return result;
     }
 }
