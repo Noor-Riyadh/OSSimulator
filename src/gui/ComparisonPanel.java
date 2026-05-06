@@ -13,7 +13,6 @@ import java.awt.*;
  * ComparisonPanel — Tab 4: runs ALL algorithms and shows a side-by-side
  * comparison table.
  *
- * TEAMMATE: Person 4 This is the performance metrics table required by the
  * project report.
  */
 public class ComparisonPanel extends JPanel {
