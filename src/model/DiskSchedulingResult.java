@@ -44,4 +44,8 @@ public class DiskSchedulingResult {
         }
         return sb.toString();
     }
+
+    public void addStep(Integer get) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
