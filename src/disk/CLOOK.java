@@ -6,34 +6,11 @@ import java.util.*;
 public class CLOOK {
 
     public static DiskSchedulingResult simulate(int initialHead, int[] requests) {
-        DiskSchedulingResult result = new DiskSchedulingResult("CLOOK");
-
-        List<Integer> left = new ArrayList<>();
-        List<Integer> right = new ArrayList<>();
-
-        for (int req : requests) {
-            if (req < initialHead) {
-                left.add(req);
-            } else {
-                right.add(req);
-            }
-        }
-
-        Collections.sort(left);
-        Collections.sort(right);
-
-        List<Integer> order = new ArrayList<>();
-        order.add(initialHead);
-
-        // Go right to last request, then jump to smallest request on left
-        for (int req : right) {
-            order.add(req);
-        }
-        for (int req : left) {
-            order.add(req);
-        }
-
-        result.setHeadMovementOrder(order);
-        return result;
+        // Like CSCAN but jumps to the SMALLEST request (not cylinder 0)
+        // Steps:
+        // 1. Split into left and right, sort both
+        // 2. Service right ascending → then jump to start of left → service left ascending
+        // Key difference from CSCAN: NO diskSize-1 or 0 added
+        return null; 
     }
 }
