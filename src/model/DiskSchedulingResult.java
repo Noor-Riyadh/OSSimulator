@@ -19,7 +19,6 @@ public class DiskSchedulingResult {
 
     public void setHeadMovementOrder(List<Integer> order) {
         this.headMovementOrder = order;
-        // calculate total seek distance from the movement order
         totalSeekDistance = 0;
         for (int i = 1; i < order.size(); i++) {
             totalSeekDistance += Math.abs(order.get(i) - order.get(i - 1));

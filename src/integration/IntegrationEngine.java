@@ -35,7 +35,9 @@ public class IntegrationEngine {
             DiskSchedulingResult diskResult;
             switch (diskAlgorithm.toUpperCase()) {
                 case "SCAN":
-                    diskResult = SCAN.simulate(requests, currentHead, diskSize, scanDirection);
+//                    diskResult = SCAN.simulate(requests, currentHead, diskSize, scanDirection);
+                    diskResult = SCAN.simulate(currentHead, requests, diskSize, scanDirection);
+
                     break;
                 case "FCFS":
                 default:

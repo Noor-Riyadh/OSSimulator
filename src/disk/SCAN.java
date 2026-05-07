@@ -4,38 +4,46 @@ import model.DiskSchedulingResult;
 import java.util.*;
 
 public class SCAN {
-    public static DiskSchedulingResult simulate(int[] requests, int head, int diskSize, String direction) {
+
+    public static DiskSchedulingResult simulate(int initialHead, int[] requests,
+            int diskSize, String direction) {
         DiskSchedulingResult result = new DiskSchedulingResult("SCAN");
+
         List<Integer> left = new ArrayList<>();
         List<Integer> right = new ArrayList<>();
-        if (direction.equalsIgnoreCase("right")) {
-            right.add(diskSize - 1);
-        } else {
-            left.add(0);
-        }
 
-        for (int r : requests) {
-            if (r < head) left.add(r);
-            else if (r > head) right.add(r);
+        for (int req : requests) {
+            if (req < initialHead) {
+                left.add(req);
+            } else {
+                right.add(req);
+            }
         }
 
         Collections.sort(left);
         Collections.sort(right);
 
-        int run = 2;
-        while (run-- > 0) {
-            if (direction.equalsIgnoreCase("right")) {
-                for (int r : right) {
-                    result.addStep(r);
-                }
-                direction = "left";
-            } else if (direction.equalsIgnoreCase("left")) {
-                for (int i = left.size() - 1; i >= 0; i--) {
-                    result.addStep(left.get(i));
-                }
-                direction = "right";
+        List<Integer> order = new ArrayList<>();
+        order.add(initialHead);
+
+        if (direction.equalsIgnoreCase("right")) {
+            for (int req : right) {
+                order.add(req);
+            }
+            order.add(diskSize - 1);
+            for (int i = left.size() - 1; i >= 0; i--) {
+                order.add(left.get(i));
+            }
+        } else {
+            for (int i = left.size() - 1; i >= 0; i--) {
+                order.add(left.get(i));
+            }
+            order.add(0);
+            for (int req : right) {
+                order.add(req);
             }
         }
+        result.setHeadMovementOrder(order);
         return result;
     }
 }

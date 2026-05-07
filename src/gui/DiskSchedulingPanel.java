@@ -104,7 +104,8 @@ public class DiskSchedulingPanel extends JPanel {
             if (rbFCFS.isSelected()) {
                 result = FCFS.simulate(head, reqs);
             } else if (rbSCAN.isSelected()) {
-                result = SCAN.simulate(reqs, head, diskSize, dir);
+                result = SCAN.simulate(head, reqs, diskSize, dir);
+                
             } else if (rbCSCAN.isSelected()) {
                 result = CSCAN.simulate(head, reqs, diskSize);
             } else if (rbLOOK.isSelected()) {
