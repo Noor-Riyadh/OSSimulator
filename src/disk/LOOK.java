@@ -6,12 +6,61 @@ import java.util.*;
 public class LOOK {
 
     public static DiskSchedulingResult simulate(int initialHead, int[] requests, String direction) {
-        // Like SCAN but does NOT go to disk end — only goes as far as the last request
-        // Steps:
-        // 1. Split into left and right, sort both
-        // 2. If direction "right": service right ascending, then left descending
-        // 3. If direction "left": service left descending, then right ascending
-        // Key difference from SCAN: NO diskSize-1 or 0 added to order
-        return null; // replace this
+      
+        DiskSchedulingResult result = new DiskSchedulingResult("LOOK");
+ 
+        List<Integer> left = new ArrayList<>();
+  
+        List<Integer> right = new ArrayList<>();
+ 
+        for (int req : requests) {
+            if (req < initialHead) {
+                left.add(req);    
+            } else {
+                right.add(req);  
+            }
+        }
+         //make requests in order 
+        Collections.sort(left);
+ 
+        Collections.sort(right);
+ 
+        List<Integer> order = new ArrayList<>();
+        order.add(initialHead);
+ 
+        if (direction.equalsIgnoreCase("left")) {
+ 
+            for (int i = left.size() - 1; i >= 0; i--) {
+                order.add(left.get(i));
+            }
+      
+            for (int req : right) {
+                order.add(req);
+            }
+ 
+        } else {
+    
+            for (int req : right) {
+                order.add(req);
+            }
+         
+            for (int i = left.size() - 1; i >= 0; i--) {
+                order.add(left.get(i));
+            }
+        }
+        //calculate total-distance
+          int totalSeek = 0;
+        int current = initialHead;
+        for (int pos : order) {
+            //make distance positive 
+            totalSeek += Math.abs(pos - current);
+            current = pos;
+        }
+
+        
+        result.setHeadMovementOrder(order);
+        result.setTotalSeekDistance(totalSeek);
+        
+        return result; 
     }
 }
