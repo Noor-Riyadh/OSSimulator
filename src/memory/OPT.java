@@ -5,6 +5,7 @@ import model.PageReplacementResult.Step;
 import java.util.*;
 
 public class OPT {
+
     public static PageReplacementResult simulate(int[] referenceString, int numFrames) {
         PageReplacementResult result = new PageReplacementResult("OPT");
         int[] frames = new int[numFrames];
@@ -22,9 +23,9 @@ public class OPT {
                 isPageFault = true;
                 if (inMemory.size() < numFrames) {
                     for (int f = 0; f < numFrames; f++) {
-                        if (frames[f] == -1) { 
-                            frames[f] = page; 
-                            break; 
+                        if (frames[f] == -1) {
+                            frames[f] = page;
+                            break;
                         }
                     }
                     inMemory.add(page);
@@ -44,13 +45,13 @@ public class OPT {
     private static int findOptimalVictim(int[] frames, int[] referenceString, int fromIndex) {
         int victimIndex = 0;
         int farthestUse = -1;
-        
+
         for (int f = 0; f < frames.length; f++) {
             int nextUse = Integer.MAX_VALUE;
             for (int j = fromIndex; j < referenceString.length; j++) {
-                if (referenceString[j] == frames[f]) { 
-                    nextUse = j; 
-                    break; 
+                if (referenceString[j] == frames[f]) {
+                    nextUse = j;
+                    break;
                 }
             }
             if (nextUse > farthestUse) {
