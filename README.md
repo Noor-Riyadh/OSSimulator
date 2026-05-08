@@ -66,9 +66,9 @@ git clone https://github.com/Noor-Riyadh/OSSimulator.git
 2. Open NetBeans → File → Open Project → select `OSSimulator1.1`
 3. Right-click `Main.java` → Run File
 
----
-
 ## 📁 Project Structure
+
+```
 src/
 ├── Main.java                    ← Entry point
 ├── disk/
@@ -95,9 +95,9 @@ src/
 │   ├── IntegrationPanel.java
 │   └── ComparisonPanel.java
 └── util/
-└── InputParser.java
+    └── InputParser.java
+```
 
----
 
 ## 📊 Sample Results
 
