@@ -1,36 +1,55 @@
 package disk;
 
 import model.DiskSchedulingResult;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CLOOK {
 
     public static DiskSchedulingResult simulate(int initialHead, int[] requests) {
+
         DiskSchedulingResult result = new DiskSchedulingResult("CLOOK");
+
         List<Integer> left = new ArrayList<>();
         List<Integer> right = new ArrayList<>();
+        List<Integer> movement = new ArrayList<>();
 
-        for (int req : requests) {
-            if (req < initialHead) {
-                left.add(req);
+        for (int i = 0; i < requests.length; i++) {
+
+            if (requests[i] < initialHead) {
+                left.add(requests[i]);
             } else {
-                right.add(req);
+                right.add(requests[i]);
             }
         }
 
         Collections.sort(left);
         Collections.sort(right);
 
-        List<Integer> order = new ArrayList<>();
-        order.add(initialHead);
-        for (int req : right) {
-            order.add(req);
-        }
-        for (int req : left) {
-            order.add(req);
+        movement.add(initialHead);
+
+        for (int i = 0; i < right.size(); i++) {
+            movement.add(right.get(i));
         }
 
-        result.setHeadMovementOrder(order);
+        for (int i = 0; i < left.size(); i++) {
+            movement.add(left.get(i));
+        }
+
+        result.setHeadMovementOrder(movement);
+
         return result;
+    }
+
+    public static void main(String[] args) {
+
+        int[] requests = {98, 183, 37, 122, 14, 124, 65, 67};
+
+        DiskSchedulingResult result = simulate(53, requests);
+
+        System.out.println("CLOOK");
+        System.out.println("Movement: " + result.getMovementString());
+        System.out.println("Total Seek Distance: " + result.getTotalSeekDistance());
     }
 }
