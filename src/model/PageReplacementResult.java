@@ -3,19 +3,15 @@ package model;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Holds the complete result of a page replacement simulation. Shared data model
- * used by all page replacement algorithms.
- */
 public class PageReplacementResult {
 
     public static class Step {
 
         public int stepNumber;
         public int page;
-        public int[] frames;       // snapshot of frames at this step
+        public int[] frames;       
         public boolean isPageFault;
-        public int replacedPage;   // -1 if no replacement
+        public int replacedPage;   
 
         public Step(int stepNumber, int page, int[] frames, boolean isPageFault, int replacedPage) {
             this.stepNumber = stepNumber;

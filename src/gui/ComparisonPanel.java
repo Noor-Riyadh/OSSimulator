@@ -1,5 +1,20 @@
 package gui;
 
+import disk.FCFS;
+import disk.SCAN;
+import disk.CSCAN;
+import disk.LOOK;
+import disk.CLOOK;
+import memory.FIFO;
+import memory.LRU;
+import memory.OPT;
+import memory.SecondChance;
+import model.DiskSchedulingResult;
+import model.PageReplacementResult;
+import util.InputParser;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import memory.*;
 import disk.*;
 import model.*;
@@ -9,12 +24,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-/**
- * ComparisonPanel — Tab 4: runs ALL algorithms and shows a side-by-side
- * comparison table.
- *
- * project report.
- */
 public class ComparisonPanel extends JPanel {
 
     private JTextField framesField = new JTextField("3", 6);
@@ -56,7 +65,6 @@ public class ComparisonPanel extends JPanel {
     }
 
     private JSplitPane buildTablesPanel() {
-        // Page replacement table
         String[] pageCols = {"Algorithm", "Page Faults", "Hits", "Fault Rate (%)"};
         pageModel = new DefaultTableModel(pageCols, 0) {
             public boolean isCellEditable(int r, int c) {
@@ -68,7 +76,6 @@ public class ComparisonPanel extends JPanel {
         JScrollPane pageScroll = new JScrollPane(pageTable);
         pageScroll.setBorder(BorderFactory.createTitledBorder("Page Replacement Comparison"));
 
-        // Disk scheduling table
         String[] diskCols = {"Algorithm", "Total Seek Distance", "Avg Seek Time"};
         diskModel = new DefaultTableModel(diskCols, 0) {
             public boolean isCellEditable(int r, int c) {
@@ -99,16 +106,14 @@ public class ComparisonPanel extends JPanel {
             int[] reqs = InputParser.parseIntArray(requestsField.getText());
             int diskSize = InputParser.parsePositiveInt(diskSizeField.getText(), "Disk size");
 
-            // --- Page Replacement ---
-            PageReplacementResult[] pageResults = {
-                FIFO.simulate(refStr, numFrames),
-                LRU.simulate(refStr, numFrames),
-                OPT.simulate(refStr, numFrames),
-                SecondChance.simulate(refStr, numFrames)
-            };
-
             pageModel.setRowCount(0);
-            for (PageReplacementResult r : pageResults) {
+
+            PageReplacementResult r1 = FIFO.simulate(refStr, numFrames);
+            PageReplacementResult r2 = LRU.simulate(refStr, numFrames);
+            PageReplacementResult r3 = OPT.simulate(refStr, numFrames);
+            PageReplacementResult r4 = SecondChance.simulate(refStr, numFrames);
+
+            for (PageReplacementResult r : new PageReplacementResult[]{r1, r2, r3, r4}) {
                 pageModel.addRow(new Object[]{
                     r.getAlgorithmName(),
                     r.getTotalPageFaults(),
@@ -117,14 +122,15 @@ public class ComparisonPanel extends JPanel {
                 });
             }
 
-            // --- Disk Scheduling ---
-            DiskSchedulingResult[] diskResults = {
-                FCFS.simulate(head, reqs),
-                SCAN.simulate(head, reqs, diskSize, "right"),
-            };
-
             diskModel.setRowCount(0);
-            for (DiskSchedulingResult r : diskResults) {
+
+            DiskSchedulingResult d1 = FCFS.simulate(head, reqs);
+            DiskSchedulingResult d2 = SCAN.simulate(head, reqs, diskSize, "right");
+            DiskSchedulingResult d3 = CSCAN.simulate(head, reqs, diskSize);
+            DiskSchedulingResult d4 = LOOK.simulate(head, reqs, "right");
+            DiskSchedulingResult d5 = CLOOK.simulate(head, reqs);
+
+            for (DiskSchedulingResult r : new DiskSchedulingResult[]{d1, d2, d3, d4, d5}) {
                 diskModel.addRow(new Object[]{
                     r.getAlgorithmName(),
                     r.getTotalSeekDistance(),
@@ -133,7 +139,8 @@ public class ComparisonPanel extends JPanel {
             }
 
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

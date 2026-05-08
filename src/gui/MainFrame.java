@@ -22,7 +22,6 @@ public class MainFrame extends JFrame {
 
         add(tabs, BorderLayout.CENTER);
 
-        // Status bar at the bottom
         JLabel status = new JLabel("  Ready — select an algorithm and click Run");
         status.setBorder(BorderFactory.createEtchedBorder());
         status.setFont(new Font("SansSerif", Font.PLAIN, 11));

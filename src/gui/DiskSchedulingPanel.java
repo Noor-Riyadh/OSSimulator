@@ -136,9 +136,6 @@ public class DiskSchedulingPanel extends JPanel {
         l.setForeground(c);
     }
 
-    // =========================================================================
-    // Disk Head Movement Chart — draws exactly like lecture slide diagrams
-    // =========================================================================
     private static class DiskChartPanel extends JPanel {
 
         private List<Integer> order;
@@ -176,7 +173,6 @@ public class DiskSchedulingPanel extends JPanel {
             g2.setColor(new Color(250, 252, 255));
             g2.fillRect(ml, mt, cw, ch);
 
-            // Grid + Y axis labels
             g2.setStroke(new BasicStroke(0.8f));
             for (int i = 0; i <= 10; i++) {
                 int y = mt + i * ch / 10;
@@ -189,13 +185,11 @@ public class DiskSchedulingPanel extends JPanel {
                 g2.drawString(lbl, ml - g2.getFontMetrics().stringWidth(lbl) - 4, y + 4);
             }
 
-            // Axes
             g2.setColor(AXIS_COLOR);
             g2.setStroke(new BasicStroke(1.5f));
             g2.drawLine(ml, mt, ml, mt + ch);
             g2.drawLine(ml, mt + ch, ml + cw, mt + ch);
 
-            // Labels
             g2.setFont(new Font("SansSerif", Font.PLAIN, 11));
             g2.setColor(Color.DARK_GRAY);
             g2.drawString("Cylinder", ml - 30, mt - 8);
@@ -204,7 +198,6 @@ public class DiskSchedulingPanel extends JPanel {
             g2.setColor(new Color(40, 40, 40));
             g2.drawString(algoName + " \u2014 Disk Head Movement", ml + 10, mt - 8);
 
-            // Points
             int n = order.size();
             int[] xs = new int[n], ys = new int[n];
             for (int i = 0; i < n; i++) {
@@ -212,14 +205,12 @@ public class DiskSchedulingPanel extends JPanel {
                 ys[i] = mt + ch - (int) ((double) order.get(i) / diskSize * ch);
             }
 
-            // Lines
             g2.setColor(LINE_COLOR);
             g2.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             for (int i = 0; i < n - 1; i++) {
                 g2.drawLine(xs[i], ys[i], xs[i + 1], ys[i + 1]);
             }
 
-            // Dots + labels
             for (int i = 0; i < n; i++) {
                 boolean first = i == 0;
                 int r = first ? 7 : 5;
@@ -239,7 +230,6 @@ public class DiskSchedulingPanel extends JPanel {
                 g2.drawString(lbl, lx, ly);
             }
 
-            // Legend
             int lx = ml + cw - 145, ly = mt + 10;
             g2.setColor(START_COLOR);
             g2.fillOval(lx, ly, 10, 10);

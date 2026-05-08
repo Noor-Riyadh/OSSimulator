@@ -11,29 +11,24 @@ import java.util.List;
 
 public class IntegrationPanel extends JPanel {
 
-    // --- Input fields ---
     private JTextField framesField = new JTextField("3", 6);
     private JTextField refField = new JTextField("7, 0, 1, 2, 0, 3, 0, 4", 18);
     private JTextField headField = new JTextField("53", 6);
     private JTextField diskSizeField = new JTextField("200", 6);
 
-    // --- Page algorithm buttons ---
     private JRadioButton rbFIFO = new JRadioButton("FIFO", true);
     private JRadioButton rbLRU = new JRadioButton("LRU");
     private JRadioButton rbOPT = new JRadioButton("OPT");
     private JRadioButton rbClock = new JRadioButton("Second Chance");
 
-    // --- Disk algorithm buttons ---
     private JRadioButton rbDiskFCFS = new JRadioButton("FCFS", true);
     private JRadioButton rbDiskSCAN = new JRadioButton("SCAN");
     private JRadioButton rbDiskCSCAN = new JRadioButton("CSCAN");
     private JRadioButton rbDiskLOOK = new JRadioButton("LOOK");
     private JRadioButton rbDiskCLOOK = new JRadioButton("CLOOK");
 
-    // --- Direction for SCAN and LOOK ---
     private JComboBox<String> dirBox = new JComboBox<>(new String[]{"right", "left"});
 
-    // --- Output area ---
     private JTextArea outputArea = new JTextArea(18, 50);
 
     public IntegrationPanel() {
@@ -43,14 +38,10 @@ public class IntegrationPanel extends JPanel {
         add(buildOutputArea(), BorderLayout.CENTER);
     }
 
-    // -------------------------------------------------------------------------
-    // BUILD INPUT PANEL
-    // -------------------------------------------------------------------------
     private JPanel buildTopInputs() {
         JPanel panel = new JPanel(new BorderLayout(8, 8));
         panel.setBorder(BorderFactory.createTitledBorder("Integrated Simulation Input"));
 
-        // --- Top row: text fields ---
         JPanel fieldsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 4));
         fieldsRow.add(new JLabel("Frames:"));
         fieldsRow.add(framesField);
@@ -63,7 +54,6 @@ public class IntegrationPanel extends JPanel {
         fieldsRow.add(new JLabel("Direction:"));
         fieldsRow.add(dirBox);
 
-        // --- Bottom row: algorithm buttons + run ---
         JPanel algoRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 4));
 
         JPanel pageAlgo = new JPanel();
@@ -97,9 +87,6 @@ public class IntegrationPanel extends JPanel {
         return panel;
     }
 
-    // -------------------------------------------------------------------------
-    // BUILD OUTPUT AREA
-    // -------------------------------------------------------------------------
     private JScrollPane buildOutputArea() {
         outputArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         outputArea.setEditable(false);
@@ -107,19 +94,15 @@ public class IntegrationPanel extends JPanel {
         return new JScrollPane(outputArea);
     }
 
-    // -------------------------------------------------------------------------
-    // RUN INTEGRATION
-    // -------------------------------------------------------------------------
+
     private void runIntegration() {
         try {
-            // Read inputs
             int numFrames = InputParser.parsePositiveInt(framesField.getText(), "Frames");
             int[] refStr = InputParser.parseIntArray(refField.getText());
             int head = InputParser.parsePositiveInt(headField.getText(), "Head");
             int diskSize = InputParser.parsePositiveInt(diskSizeField.getText(), "Disk size");
             String dir = (String) dirBox.getSelectedItem();
 
-            // Run selected page replacement algorithm
             PageReplacementResult pageResult;
             if (rbFIFO.isSelected()) {
                 pageResult = FIFO.simulate(refStr, numFrames);
@@ -131,7 +114,6 @@ public class IntegrationPanel extends JPanel {
                 pageResult = SecondChance.simulate(refStr, numFrames);
             }
 
-            // Get selected disk algorithm name
             String diskAlgo;
             if (rbDiskFCFS.isSelected()) {
                 diskAlgo = "FCFS";
@@ -145,11 +127,9 @@ public class IntegrationPanel extends JPanel {
                 diskAlgo = "CLOOK";
             }
 
-            // Run integration engine
             List<IntegrationEvent> events = IntegrationEngine.simulate(
                     pageResult, head, diskSize, diskAlgo, dir);
 
-            // Display results
             displayIntegration(pageResult, events, diskAlgo);
 
         } catch (IllegalArgumentException ex) {
@@ -158,15 +138,11 @@ public class IntegrationPanel extends JPanel {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // DISPLAY RESULTS
-    // -------------------------------------------------------------------------
     private void displayIntegration(PageReplacementResult pageResult,
             List<IntegrationEvent> events,
             String diskAlgo) {
         StringBuilder sb = new StringBuilder();
 
-        // Header
         sb.append("=== INTEGRATION SIMULATION ===\n");
         sb.append("Page Algorithm  : ").append(pageResult.getAlgorithmName()).append("\n");
         sb.append("Disk Algorithm  : ").append(diskAlgo).append("\n");
@@ -179,7 +155,6 @@ public class IntegrationPanel extends JPanel {
         if (events.isEmpty()) {
             sb.append("No page faults occurred.");
         } else {
-            // Total seek distance across all events
             int totalSeek = 0;
 
             for (IntegrationEvent evt : events) {
@@ -200,9 +175,7 @@ public class IntegrationPanel extends JPanel {
         outputArea.setCaretPosition(0);
     }
 
-    // -------------------------------------------------------------------------
-    // FORMAT HEAD PATH
-    // -------------------------------------------------------------------------
+
     private String formatPath(List<Integer> path) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < path.size(); i++) {

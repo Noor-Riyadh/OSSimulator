@@ -15,7 +15,6 @@ import java.util.*;
 
 public class IntegrationEngine {
 
-    // Maps page number to its disk block location
     private static int pageToBlock(int page) {
         return page * 10 + 50;
     }
@@ -27,24 +26,18 @@ public class IntegrationEngine {
             String diskAlgorithm,
             String scanDirection) {
 
-        // Step 1 — result list + track head
         List<IntegrationEvent> events = new ArrayList<>();
         int currentHead = initialHead;
 
-        // Step 2 — loop through every page replacement step
         for (Step step : pageResult.getSteps()) {
 
-            // Step 3 — skip hits
             if (!step.isPageFault) {
                 continue;
             }
 
-            // Step 4 — calculate disk block
             int diskBlock = pageToBlock(step.page);
             int[] requests = new int[]{diskBlock};
 
-            // Step 5 — send to disk algorithm
-            // Step 5 — send to disk algorithm
             DiskSchedulingResult diskResult;
             String algo = diskAlgorithm.toUpperCase().trim();
 
@@ -63,10 +56,8 @@ public class IntegrationEngine {
                 diskResult = FCFS.simulate(currentHead, requests);
             }
 
-            // Step 6 — get head path
             List<Integer> path = diskResult.getHeadMovementOrder();
 
-            // Step 7 — create integration event
             IntegrationEvent event = new IntegrationEvent(
                     step.stepNumber,
                     step.page,
@@ -78,11 +69,9 @@ public class IntegrationEngine {
             );
             events.add(event);
 
-            // Step 8 — update head position
             currentHead = path.get(path.size() - 1);
         }
 
-        // Step 9 — return all events
         return events;
     }
 }
