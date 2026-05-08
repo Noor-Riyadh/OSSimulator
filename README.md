@@ -1,111 +1,146 @@
-# Memory & Disk Management Simulator
+# 🖥️ Memory & Disk Management Simulator
+
 ### OS2 Final Project — Spring 2026 | Future University in Egypt
+### Faculty of Computers and Information Technology | Computer Science Department
 
 ---
 
-## How to Open in NetBeans
+## 📋 Project Overview
 
-1. Open NetBeans
-2. File → New Project → Java → Java Application → Next
-3. Project Name: `OSSimulator`
-4. Uncheck "Create Main Class" → Finish
-5. Delete the auto-generated `src` folder content
-6. Copy ALL files from this zip into the `src` folder (keep the package subfolders)
-7. Right-click project → Properties → Sources → verify Source Package Folders = `src`
-8. Right-click `Main.java` → Run File
+A Java desktop application that simulates how an operating system manages **virtual memory** and **disk scheduling**. The simulator visualizes page replacement algorithms and disk head movement in real time, with full integration between memory and disk subsystems.
 
 ---
 
-## Project Structure
+## ✨ Features
 
-```
+- **4 Page Replacement Algorithms** with step-by-step animation and color-coded results
+- **5 Disk Scheduling Algorithms** with a live head movement chart
+- **Integration Engine** — connects memory faults directly to disk requests
+- **Comparison Table** — runs all algorithms side by side with performance metrics
+- Built with **Java Swing** — no external libraries required
+
+---
+
+## 🧠 Algorithms Implemented
+
+### Page Replacement
+| Algorithm | Description |
+|---|---|
+| FIFO | Replaces the page that arrived first in memory |
+| LRU | Replaces the least recently used page |
+| OPT | Replaces the page not needed for the longest time (optimal benchmark) |
+| Second Chance | Like FIFO but gives pages a second chance using reference bits |
+
+### Disk Scheduling
+| Algorithm | Description |
+|---|---|
+| FCFS | Services requests in arrival order |
+| SCAN | Moves in one direction, reverses at disk end (elevator) |
+| CSCAN | One direction only, jumps back to cylinder 0 |
+| LOOK | Like SCAN but stops at last request instead of disk end |
+| CLOOK | Like CSCAN but jumps to smallest request instead of cylinder 0 |
+
+---
+
+## 🔗 Integration (Core Feature)
+
+When a page fault occurs:
+1. Memory checks if a frame is available
+2. If full → selected page replacement algorithm evicts a page
+3. A disk request is generated for the new page
+4. Selected disk scheduling algorithm services the request
+5. The full event is recorded and displayed
+
+---
+
+## 🚀 How to Run
+
+### Option 1 — JAR file (easiest)
+1. Download `OSSimulator1.1.jar` from the `dist` folder
+2. Double-click the JAR file
+3. The simulator opens immediately
+
+### Option 2 — NetBeans
+1. Clone the repository:
+git clone https://github.com/Noor-Riyadh/OSSimulator.git
+2. Open NetBeans → File → Open Project → select `OSSimulator1.1`
+3. Right-click `Main.java` → Run File
+
+---
+
+## 📁 Project Structure
 src/
-├── Main.java                        ← Entry point (run this)
-│
-├── model/
-│   ├── PageReplacementResult.java   ← Data model for memory simulation
-│   ├── DiskSchedulingResult.java    ← Data model for disk simulation
-│   └── IntegrationEvent.java        ← Data model for integration events
-│
-├── memory/                          ← TEAMMATE: Person 1 & 2
-│   ├── FIFO.java                    ← Person 1
-│   ├── LRU.java                     ← Person 1
-│   ├── OPT.java                     ← Person 2
-│   └── SecondChance.java            ← Person 2
-│
-├── disk/                            ← TEAMMATE: Person 3
+├── Main.java                    ← Entry point
+├── disk/
 │   ├── FCFS.java
 │   ├── SCAN.java
-│   └── CSCAN_LOOK_CLOOK.java        ← Contains CSCAN, LOOK, CLOOK classes
-│
-├── integration/                     ← TEAMMATE: Person 4
-│   └── IntegrationEngine.java       ← Core integration logic
-│
-├── gui/                             ← TEAMMATE: Person 4
-│   ├── MainFrame.java               ← Main window with 4 tabs
-│   ├── PageReplacementPanel.java    ← Tab 1
-│   ├── DiskSchedulingPanel.java     ← Tab 2
-│   ├── IntegrationPanel.java        ← Tab 3
-│   └── ComparisonPanel.java         ← Tab 4
-│
+│   ├── CSCAN.java
+│   ├── LOOK.java
+│   └── CLOOK.java
+├── memory/
+│   ├── FIFO.java
+│   ├── LRU.java
+│   ├── OPT.java
+│   └── SecondChance.java
+├── integration/
+│   └── IntegrationEngine.java
+├── model/
+│   ├── PageReplacementResult.java
+│   ├── DiskSchedulingResult.java
+│   └── IntegrationEvent.java
+├── gui/
+│   ├── MainFrame.java
+│   ├── PageReplacementPanel.java
+│   ├── DiskSchedulingPanel.java
+│   ├── IntegrationPanel.java
+│   └── ComparisonPanel.java
 └── util/
-    └── InputParser.java             ← Input validation helper
-```
+└── InputParser.java
 
 ---
 
-## Team Task Split
+## 📊 Sample Results
 
-| Person | Files to complete |
-|--------|-------------------|
-| **Person 1** | `memory/FIFO.java`, `memory/LRU.java` — already done, test thoroughly |
-| **Person 2** | `memory/OPT.java`, `memory/SecondChance.java` — already done, test thoroughly |
-| **Person 3** | `disk/FCFS.java`, `disk/SCAN.java` done. Complete `CSCAN_LOOK_CLOOK.java` and wire into `DiskSchedulingPanel` and `ComparisonPanel` (search for `TODO Person 3`) |
-| **Person 4** | Complete GUI panels, wire up all algorithms. Search for `TODO` comments. Run integration tests. |
+### Page Replacement — Frames: 3, Reference: 7,0,1,2,0,3,0,4
+| Algorithm | Page Faults | Hits | Fault Rate |
+|---|---|---|---|
+| FIFO | 7 | 1 | 87.5% |
+| LRU | 6 | 2 | 75.0% |
+| OPT | 6 | 2 | 75.0% |
+| Second Chance | 6 | 2 | 75.0% |
 
----
-
-## GitHub Workflow
-
-```bash
-# Clone the repo (everyone does this once)
-git clone https://github.com/YOUR_USERNAME/OSSimulator.git
-
-# Create your branch (each person)
-git checkout -b feature/your-name
-
-# Daily: before starting work, pull latest changes
-git pull origin main
-
-# Save your work
-git add .
-git commit -m "Describe what you did"
-git push origin feature/your-name
-
-# Then open a Pull Request on GitHub to merge into main
-```
+### Disk Scheduling — Head: 53, Requests: 98,183,37,122,14,124,65,67
+| Algorithm | Total Seek Distance | Avg Seek Time |
+|---|---|---|
+| FCFS | 640 | 80.00 |
+| SCAN | 331 | 36.78 |
+| CSCAN | 382 | 38.20 |
+| LOOK | 299 | 37.38 |
+| CLOOK | 322 | 40.25 |
 
 ---
 
-## TODO Checklist
+## 👥 Team
 
-- [ ] Person 3: Expose CSCAN, LOOK, CLOOK as public classes in separate files
-- [ ] Person 3: Wire CSCAN/LOOK/CLOOK into `DiskSchedulingPanel.runSimulation()`
-- [ ] Person 3: Wire CSCAN/LOOK/CLOOK into `ComparisonPanel.runComparison()`
-- [ ] Person 4: Wire CSCAN/LOOK/CLOOK into `IntegrationEngine.simulate()` switch case
-- [ ] Everyone: Test with sample inputs from project PDF
-- [ ] Person 4: Take screenshots of all 4 tabs for the report
+| Name | Role | Algorithms |
+|---|---|---|
+| Noor | Group Leader | Integration Engine, Comparison Panel, Report |
+| Manar | Developer | FIFO, LRU, LOOK |
+| Rawan | Developer | OPT, Second Chance, SCAN |
+| Hala | Developer | FCFS, CSCAN, CLOOK |
 
 ---
 
-## Sample Test Inputs (from project PDF)
+## 🛠️ Built With
 
-**Page Replacement:**
-- Frames: `3`
-- Reference string: `7, 0, 1, 2, 0, 3, 0, 4`
+- **Java 24**
+- **Java Swing** — GUI framework
+- **Apache NetBeans IDE 25**
+- **Git & GitHub** — version control
 
-**Disk Scheduling:**
-- Initial head: `53`
-- Disk size: `200`
-- Requests: `98, 183, 37, 122, 14, 124, 65, 67`
-- Direction: `right`
+---
+
+## 📄 Requirements
+
+- Java JDK 11 or higher
+- No external libraries needed — pure Java
